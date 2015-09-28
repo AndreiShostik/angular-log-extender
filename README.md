@@ -1,23 +1,23 @@
-AngularJS $log service extender.
+angular-log-extender
+===
 + log to server
 + error levels
 + providers
 
+# Configuration:
 
-Configuration:
-
-angular
-    .module('YourModule')
-    .config(function (logExtenderProvider, ApiServerHostProvider) {
-        logExtenderProvider.setLevel(logExtenderProvider.levels.warn);
-        logExtenderProvider.setAppender({
-            appenderType: logExtenderProvider.appenderTypes.http,
-            urlBatch: ApiServerHostProvider.$get() + 'log/batch',
-            storage: 'localStorageService'
+    angular
+        .module('YourModule')
+        .config(function (logExtenderProvider, ApiServerHostProvider) {
+            logExtenderProvider.setLevel(logExtenderProvider.levels.warn);
+            logExtenderProvider.setAppender({
+                appenderType: logExtenderProvider.appenderTypes.http,
+                urlBatch: ApiServerHostProvider.$get() + 'log/batch',
+                storage: 'localStorageService'
+            });
+        })
+        .run(function (logExtender) {
+            if (logExtender.storageAvailability()) {
+                logExtender.appender.sendStorageData();
+            }
         });
-    })
-    .run(function (logExtender) {
-        if (logExtender.storageAvailability()) {
-            logExtender.appender.sendStorageData();
-        }
-    });
